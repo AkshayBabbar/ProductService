@@ -1,6 +1,9 @@
 package org.example.productservice.controllers;
 
+import org.example.productservice.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,13 +18,25 @@ import java.util.List;
  * 5. AddProduct()
  */
 
+/**
+ *  1.Field Injection
+ *  2.Setter Injection
+ *  3.Constructor Injection
+ */
+
 @RestController
 @RequestMapping("/products")
 public class ProductController {
+    private ProductService productService;
+
+    @Autowired
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @GetMapping("/{id}")
-    public String getProductById(Long id) {
-        return "Product Fetched with id " + id;
+    public String getProductById(@PathVariable("id") Long id) {
+        return productService.getProductById(id);
     }
 
     @GetMapping()
@@ -29,9 +44,10 @@ public class ProductController {
         return Collections.emptyList();
     }
 
+
 //    @GetMapping
 //    public String getProductByCategory(String Category) {
 
 //    }
 
-}
+    }
