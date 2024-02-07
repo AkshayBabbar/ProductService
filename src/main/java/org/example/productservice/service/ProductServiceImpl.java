@@ -1,19 +1,20 @@
 package org.example.productservice.service;
 
+import org.example.productservice.models.Product;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public class ProductServiceImpl implements ProductService{
+@Service("SelfProductService")
+public class ProductServiceImpl implements ProductService {
 
     @Override
-    public String getProductById(Long id) {
-        return "Product from service: " + id;
+    public Product getProductById(Long id) {
+        return null;
     }
 
     @Override
-    public List<String> getAllProducts() {
+    public List<Product> getAllProducts() {
         return null;
     }
 
@@ -21,4 +22,18 @@ public class ProductServiceImpl implements ProductService{
     public String getProductByCategory(String Category) {
         return null;
     }
+
+    @Override
+    public void deleteProductById() {
+    }
+
+    @Override
+    public void addProduct() {
+    }
+
+    @Override
+    public void updateProductById() {
+
+    }
+
 }
