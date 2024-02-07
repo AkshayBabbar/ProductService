@@ -1,4 +1,4 @@
-package com.example.productservicejanbatch24.controllers;
+package org.example.productservice.controllers;
 
 
 import org.example.productservice.models.Product;
@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -36,8 +35,8 @@ public class ProductController {
     }
 
     @GetMapping()
-    public List<String> getAllProducts() {
-        return Collections.emptyList();
+    public List<Product> getAllProducts() {
+        return productService.getAllProducts();
     }
 
 //    public String getProductByCategory(String category) {

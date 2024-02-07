@@ -1,6 +1,7 @@
 package org.example.productservice.service;
 
 import org.example.productservice.dto.FakeStoreProductDTO;
+import org.example.productservice.exception.NoProductFoundException;
 import org.example.productservice.models.Category;
 import org.example.productservice.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
