@@ -27,13 +27,16 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProductById() {
     }
 
-    @Override
-    public void addProduct() {
-    }
+
 
     @Override
     public void updateProductById() {
 
+    }
+
+    @Override
+    public Product addProduct(Product product) {
+        return null;
     }
 
 }

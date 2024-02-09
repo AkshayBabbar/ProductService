@@ -19,6 +19,7 @@ public class FakeStoreProductServiceImpl implements ProductService {
     private final RestTemplateBuilder restTemplateBuilder;
     private final String getProductUrl = "https://fakestoreapi.com/products/1";
     private final String genericProductUrl = "https://fakestoreapi.com/products";
+    private final String specifiedProductUrl = "https://fakestoreapi.com/products/{id}";
 
     @Autowired
     public FakeStoreProductServiceImpl(RestTemplateBuilder restTemplateBuilder) {
@@ -26,9 +27,13 @@ public class FakeStoreProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product getProductById(Long id) {
+    public Product getProductById(Long id) throws NoProductFoundException {
         RestTemplate restTemplate = restTemplateBuilder.build();
-        ResponseEntity<FakeStoreProductDTO> responseEntity = restTemplate.getForEntity(getProductUrl, FakeStoreProductDTO.class);
+        ResponseEntity<FakeStoreProductDTO> responseEntity = restTemplate.getForEntity(specifiedProductUrl, FakeStoreProductDTO.class, id);
+        if (responseEntity.getBody() == null) {
+            //throw exception
+            throw new NoProductFoundException("Product not found for id: " + id);
+        }
         return getProductFromFakeStoreProductDTO(responseEntity.getBody());
     }
 
@@ -55,24 +60,39 @@ public class FakeStoreProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void addProduct() {
-
-    }
-
-    @Override
     public void updateProductById() {
 
     }
 
-    public Product getProductFromFakeStoreProductDTO(FakeStoreProductDTO fakeStoreProductDTO) {
+    @Override
+    public Product addProduct(Product product) {
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        ResponseEntity<FakeStoreProductDTO> responseEntity =
+                restTemplate.postForEntity(genericProductUrl,
+                        getFakeStoreProductDTOFromProduct(product), FakeStoreProductDTO.class);
+
+        return getProductFromFakeStoreProductDTO(responseEntity.getBody());
+    }
+    private Product getProductFromFakeStoreProductDTO(FakeStoreProductDTO fakeStoreProductDto){
         Product product = new Product();
-        product.setId(fakeStoreProductDTO.getId());
-        product.setDesc(fakeStoreProductDTO.getDescription());
-        product.setTitle(fakeStoreProductDTO.getTitle());
+        product.setId(fakeStoreProductDto.getId());
+        product.setTitle(fakeStoreProductDto.getTitle());
+        product.setDesc(fakeStoreProductDto.getDescription());
         Category category = new Category();
-        category.setName(fakeStoreProductDTO.getCategory());
+        category.setName(fakeStoreProductDto.getCategory());
         product.setCategory(category);
-        product.setPrice(fakeStoreProductDTO.getPrice());
+        product.setPrice(fakeStoreProductDto.getPrice());
+
         return product;
     }
+
+    private FakeStoreProductDTO getFakeStoreProductDTOFromProduct(Product product){
+        FakeStoreProductDTO fakeStoreProductDto = new FakeStoreProductDTO();
+        fakeStoreProductDto.setTitle(product.getTitle());
+        fakeStoreProductDto.setDescription(product.getDesc());
+        fakeStoreProductDto.setCategory(product.getCategory().getName());
+        fakeStoreProductDto.setPrice(product.getPrice());
+        return fakeStoreProductDto;
+    }
+
 }
