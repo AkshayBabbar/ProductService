@@ -6,10 +6,7 @@ import org.example.productservice.models.Category;
 import org.example.productservice.models.Product;
 import org.example.productservice.thirdPartyClient.FakeStoreClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -44,7 +41,7 @@ public class FakeStoreProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product deleteProductById(Long id) {
+    public Product deleteProductById(Long id) throws NoProductFoundException {
         return getProductFromFakeStoreProductDTO(fakeStoreClient.deleteProductById(id));
     }
 

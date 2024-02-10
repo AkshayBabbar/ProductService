@@ -3,6 +3,7 @@ package org.example.productservice.thirdPartyClient;
 import org.example.productservice.dto.FakeStoreProductDTO;
 import org.example.productservice.exception.NoProductFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -11,16 +12,21 @@ import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Objects;
+
 @Component
 public class FakeStoreClient {
     private final RestTemplateBuilder restTemplateBuilder;
     private final String getProductUrl = "https://fakestoreapi.com/products/1";
     private final String genericProductUrl = "https://fakestoreapi.com/products";
-    private final String specificProductUrl = "https://fakestoreapi.com/products/{id}";
+    
+    @Value("${fakestore.api.url}")
+    private final String specificProductUrl;
 
     @Autowired
     public FakeStoreClient(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplateBuilder = restTemplateBuilder;
+        specificProductUrl = null;
     }
 
     public FakeStoreProductDTO getProductById(Long id) throws NoProductFoundException {
@@ -45,11 +51,16 @@ public class FakeStoreClient {
         return null;
     }
 
-    public FakeStoreProductDTO deleteProductById(Long id) {
+    public FakeStoreProductDTO deleteProductById(Long id) throws NoProductFoundException {
         RestTemplate restTemplate = restTemplateBuilder.build();
         RequestCallback requestCallback = restTemplate.acceptHeaderRequestCallback(FakeStoreProductDTO.class);
         ResponseExtractor<ResponseEntity<FakeStoreProductDTO>> responseExtractor = restTemplate.responseEntityExtractor(FakeStoreProductDTO.class);
         ResponseEntity<FakeStoreProductDTO> responseEntity = restTemplate.execute(specificProductUrl, HttpMethod.DELETE, requestCallback, responseExtractor, id);
+        if (responseEntity.getBody() == null) {
+            //throw exception
+            throw new NoProductFoundException("Product not found for id: " + id);
+        }
+
         return responseEntity.getBody();
     }
 
