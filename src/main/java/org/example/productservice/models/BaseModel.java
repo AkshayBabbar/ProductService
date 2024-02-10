@@ -6,7 +6,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class BaseModel {
-
     private Long id;
 
 }

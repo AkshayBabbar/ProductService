@@ -22,10 +22,6 @@ public class ProductController {
         this.productService = productService;
     }
 
-    //    @Autowired
-//    public void setProductService(ProductService productService) {
-//        this.productService = productService;
-//    }
     @PostMapping
     public Product createProduct(@RequestBody Product product) {
         return productService.addProduct(product);
@@ -41,9 +37,10 @@ public class ProductController {
         return productService.getAllProducts();
     }
 
-//    public String getProductByCategory(String category) {
-//
-//    }
+    @DeleteMapping("/{id}")
+    public Product deleteProductbyId(@PathVariable("id") Long id) throws NoProductFoundException {
+        return productService.deleteProductById(id);
+    }
 
 }
 

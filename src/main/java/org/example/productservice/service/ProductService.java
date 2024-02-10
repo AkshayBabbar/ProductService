@@ -10,8 +10,9 @@ public interface ProductService {
     Product getProductById(Long id) throws NoProductFoundException;
     List<Product> getAllProducts();
     String getProductByCategory(String Category);
-    void deleteProductById();
     void updateProductById();
 
     Product addProduct(Product product);
+
+    Product deleteProductById(Long id);
 }

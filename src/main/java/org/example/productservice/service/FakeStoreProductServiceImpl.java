@@ -4,6 +4,7 @@ import org.example.productservice.dto.FakeStoreProductDTO;
 import org.example.productservice.exception.NoProductFoundException;
 import org.example.productservice.models.Category;
 import org.example.productservice.models.Product;
+import org.example.productservice.thirdPartyClient.FakeStoreClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
@@ -16,34 +17,22 @@ import java.util.List;
 @Service("FakeProductService")
 public class FakeStoreProductServiceImpl implements ProductService {
 
-    private final RestTemplateBuilder restTemplateBuilder;
-    private final String getProductUrl = "https://fakestoreapi.com/products/1";
-    private final String genericProductUrl = "https://fakestoreapi.com/products";
-    private final String specifiedProductUrl = "https://fakestoreapi.com/products/{id}";
+    private FakeStoreClient fakeStoreClient;
 
     @Autowired
-    public FakeStoreProductServiceImpl(RestTemplateBuilder restTemplateBuilder) {
-        this.restTemplateBuilder = restTemplateBuilder;
+    public FakeStoreProductServiceImpl(FakeStoreClient fakeStoreClient) {
+        this.fakeStoreClient = fakeStoreClient;
     }
 
     @Override
     public Product getProductById(Long id) throws NoProductFoundException {
-        RestTemplate restTemplate = restTemplateBuilder.build();
-        ResponseEntity<FakeStoreProductDTO> responseEntity = restTemplate.getForEntity(specifiedProductUrl, FakeStoreProductDTO.class, id);
-        if (responseEntity.getBody() == null) {
-            //throw exception
-            throw new NoProductFoundException("Product not found for id: " + id);
-        }
-        return getProductFromFakeStoreProductDTO(responseEntity.getBody());
+        return getProductFromFakeStoreProductDTO(fakeStoreClient.getProductById(id));
     }
 
     @Override
     public List<Product> getAllProducts() {
-
-        RestTemplate restTemplate = restTemplateBuilder.build();
-        ResponseEntity<FakeStoreProductDTO[]> responseEntity = restTemplate.getForEntity(getProductUrl, FakeStoreProductDTO[].class);
         List<Product> productList = new LinkedList<>();
-        for (FakeStoreProductDTO fakeStoreProductDTO : responseEntity.getBody()) {
+        for (FakeStoreProductDTO fakeStoreProductDTO : fakeStoreClient.getAllProducts()) {
             productList.add(getProductFromFakeStoreProductDTO(fakeStoreProductDTO));
         }
         return productList;
@@ -55,8 +44,8 @@ public class FakeStoreProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProductById() {
-
+    public Product deleteProductById(Long id) {
+        return getProductFromFakeStoreProductDTO(fakeStoreClient.deleteProductById(id));
     }
 
     @Override
@@ -66,14 +55,10 @@ public class FakeStoreProductServiceImpl implements ProductService {
 
     @Override
     public Product addProduct(Product product) {
-        RestTemplate restTemplate = restTemplateBuilder.build();
-        ResponseEntity<FakeStoreProductDTO> responseEntity =
-                restTemplate.postForEntity(genericProductUrl,
-                        getFakeStoreProductDTOFromProduct(product), FakeStoreProductDTO.class);
-
-        return getProductFromFakeStoreProductDTO(responseEntity.getBody());
+        return getProductFromFakeStoreProductDTO(fakeStoreClient.addProduct(getFakeStoreProductDTOFromProduct(product)));
     }
-    private Product getProductFromFakeStoreProductDTO(FakeStoreProductDTO fakeStoreProductDto){
+
+    private Product getProductFromFakeStoreProductDTO(FakeStoreProductDTO fakeStoreProductDto) {
         Product product = new Product();
         product.setId(fakeStoreProductDto.getId());
         product.setTitle(fakeStoreProductDto.getTitle());
@@ -86,7 +71,7 @@ public class FakeStoreProductServiceImpl implements ProductService {
         return product;
     }
 
-    private FakeStoreProductDTO getFakeStoreProductDTOFromProduct(Product product){
+    private FakeStoreProductDTO getFakeStoreProductDTOFromProduct(Product product) {
         FakeStoreProductDTO fakeStoreProductDto = new FakeStoreProductDTO();
         fakeStoreProductDto.setTitle(product.getTitle());
         fakeStoreProductDto.setDescription(product.getDesc());
