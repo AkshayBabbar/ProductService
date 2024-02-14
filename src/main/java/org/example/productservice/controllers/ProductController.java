@@ -14,7 +14,6 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductController {
 
-    //    @Autowired
     private ProductService productService;
 
     @Autowired
@@ -40,6 +39,11 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public Product deleteProductbyId(@PathVariable("id") Long id) throws NoProductFoundException {
         return productService.deleteProductById(id);
+    }
+
+    @PutMapping("{id}")
+    public Product updateProductById(@PathVariable("id") Long id) throws NoProductFoundException{
+        return productService.updateProductById(id);
     }
 
 }

@@ -12,14 +12,12 @@ import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Objects;
-
 @Component
 public class FakeStoreClient {
     private final RestTemplateBuilder restTemplateBuilder;
     private final String getProductUrl = "https://fakestoreapi.com/products/1";
     private final String genericProductUrl = "https://fakestoreapi.com/products";
-    
+
     @Value("${fakestore.api.url}")
     private final String specificProductUrl;
 
@@ -64,8 +62,16 @@ public class FakeStoreClient {
         return responseEntity.getBody();
     }
 
-    public void updateProductById() {
-
+    public FakeStoreProductDTO updateProductById(Long id) throws NoProductFoundException{
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(FakeStoreProductDTO.class);
+        ResponseExtractor<ResponseEntity<FakeStoreProductDTO>> responseExtractor = restTemplate.responseEntityExtractor(FakeStoreProductDTO.class);
+        ResponseEntity<FakeStoreProductDTO> responseEntity = restTemplate.execute(specificProductUrl, HttpMethod.PUT, requestCallback, responseExtractor, id);
+        if (responseEntity.getBody() == null) {
+            //throw exception
+            throw new NoProductFoundException("Product not found for id: " + id);
+        }
+        return responseEntity.getBody();
     }
 
     public FakeStoreProductDTO addProduct(FakeStoreProductDTO fakeStoreProductDTO) {

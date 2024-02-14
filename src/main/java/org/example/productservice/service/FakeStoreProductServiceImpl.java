@@ -46,8 +46,8 @@ public class FakeStoreProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void updateProductById() {
-
+    public Product updateProductById(Long id) throws NoProductFoundException {
+        return getProductFromFakeStoreProductDTO(fakeStoreClient.updateProductById(id));
     }
 
     @Override
@@ -59,7 +59,7 @@ public class FakeStoreProductServiceImpl implements ProductService {
         Product product = new Product();
         product.setId(fakeStoreProductDto.getId());
         product.setTitle(fakeStoreProductDto.getTitle());
-        product.setDesc(fakeStoreProductDto.getDescription());
+        product.setDescription(fakeStoreProductDto.getDescription());
         Category category = new Category();
         category.setName(fakeStoreProductDto.getCategory());
         product.setCategory(category);
@@ -71,7 +71,7 @@ public class FakeStoreProductServiceImpl implements ProductService {
     private FakeStoreProductDTO getFakeStoreProductDTOFromProduct(Product product) {
         FakeStoreProductDTO fakeStoreProductDto = new FakeStoreProductDTO();
         fakeStoreProductDto.setTitle(product.getTitle());
-        fakeStoreProductDto.setDescription(product.getDesc());
+        fakeStoreProductDto.setDescription(product.getDescription());
         fakeStoreProductDto.setCategory(product.getCategory().getName());
         fakeStoreProductDto.setPrice(product.getPrice());
         return fakeStoreProductDto;
