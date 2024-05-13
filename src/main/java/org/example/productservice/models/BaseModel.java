@@ -7,14 +7,16 @@ import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.UUID;
+import java.util.Date;
 
 @Setter
 @Getter
 @MappedSuperclass
 public class BaseModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long     id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Date createdAt;
+    private Date updatedAt;
 
 }

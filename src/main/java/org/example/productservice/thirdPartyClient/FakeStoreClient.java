@@ -1,7 +1,7 @@
 package org.example.productservice.thirdPartyClient;
 
 import org.example.productservice.dto.FakeStoreProductDTO;
-import org.example.productservice.exception.NoProductFoundException;
+import org.example.productservice.exception.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -27,12 +27,12 @@ public class FakeStoreClient {
         specificProductUrl = null;
     }
 
-    public FakeStoreProductDTO getProductById(Long id) throws NoProductFoundException {
+    public FakeStoreProductDTO getProductById(Long id) throws ProductNotFoundException {
         RestTemplate restTemplate = restTemplateBuilder.build();
         ResponseEntity<FakeStoreProductDTO> responseEntity = restTemplate.getForEntity(specificProductUrl, FakeStoreProductDTO.class, id);
         if (responseEntity.getBody() == null) {
             //throw exception
-            throw new NoProductFoundException("Product not found for id: " + id);
+            throw new ProductNotFoundException(id,"Product not found for id: " + id);
         }
 
         return responseEntity.getBody();
@@ -49,27 +49,27 @@ public class FakeStoreClient {
         return null;
     }
 
-    public FakeStoreProductDTO deleteProductById(Long id) throws NoProductFoundException {
+    public FakeStoreProductDTO deleteProductById(Long id) throws ProductNotFoundException {
         RestTemplate restTemplate = restTemplateBuilder.build();
         RequestCallback requestCallback = restTemplate.acceptHeaderRequestCallback(FakeStoreProductDTO.class);
         ResponseExtractor<ResponseEntity<FakeStoreProductDTO>> responseExtractor = restTemplate.responseEntityExtractor(FakeStoreProductDTO.class);
         ResponseEntity<FakeStoreProductDTO> responseEntity = restTemplate.execute(specificProductUrl, HttpMethod.DELETE, requestCallback, responseExtractor, id);
         if (responseEntity.getBody() == null) {
             //throw exception
-            throw new NoProductFoundException("Product not found for id: " + id);
+            throw new ProductNotFoundException(id,"Product not found for id: " + id);
         }
 
         return responseEntity.getBody();
     }
 
-    public FakeStoreProductDTO updateProductById(Long id) throws NoProductFoundException{
+    public FakeStoreProductDTO updateProductById(Long id) throws ProductNotFoundException {
         RestTemplate restTemplate = restTemplateBuilder.build();
         RequestCallback requestCallback = restTemplate.httpEntityCallback(FakeStoreProductDTO.class);
         ResponseExtractor<ResponseEntity<FakeStoreProductDTO>> responseExtractor = restTemplate.responseEntityExtractor(FakeStoreProductDTO.class);
         ResponseEntity<FakeStoreProductDTO> responseEntity = restTemplate.execute(specificProductUrl, HttpMethod.PUT, requestCallback, responseExtractor, id);
         if (responseEntity.getBody() == null) {
             //throw exception
-            throw new NoProductFoundException("Product not found for id: " + id);
+            throw new ProductNotFoundException(id,"Product not found for id: " + id);
         }
         return responseEntity.getBody();
     }
