@@ -5,8 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ExceptionDto {
+public class ProductNotFoundExceptionDTO {
     private String message;
-    private String status;
-
 }

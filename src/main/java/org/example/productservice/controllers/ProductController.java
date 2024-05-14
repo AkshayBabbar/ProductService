@@ -1,6 +1,7 @@
 package org.example.productservice.controllers;
 
 
+import org.example.productservice.commons.AuthCommons;
 import org.example.productservice.exception.ProductNotFoundException;
 import org.example.productservice.models.Product;
 import org.example.productservice.service.ProductService;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 //localhost:8080/products
@@ -17,15 +19,17 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductController {
 
-    private ProductService productService;
+    private final ProductService productService;
+    private AuthCommons authCommons;
 
     @Autowired
-    public ProductController(@Qualifier("SelfProductService") ProductService productService) {
+    public ProductController(@Qualifier("SelfProductService") ProductService productService, AuthCommons authCommons) {
         this.productService = productService;
+        this.authCommons = authCommons;
     }
 
     @PostMapping
-    public Product createProduct(@RequestBody Product product) {
+    public Product addProduct(@RequestBody Product product) {
         return productService.addProduct(product);
     }
 
@@ -56,7 +60,12 @@ public class ProductController {
 
     @GetMapping("/")
     public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+        List<Product> productList = productService.getAllProducts();
+        Product product = new Product();
+        product.setId(4L);
+        product.setTitle("macbook pro");
+        productList.add(product);
+        return productList;
     }
 
     @DeleteMapping("/{id}")
@@ -64,68 +73,24 @@ public class ProductController {
         return productService.deleteProductById(id);
     }
 
+    //createProduct
+    //deleteProduct
+    //updateProduct -> Partial Update (PATCH)
+    //replaceProduct -> Replace (PUT)
+
     @PutMapping("{id}")
     public Product updateProductById(@PathVariable("id") Long id) throws ProductNotFoundException {
         return productService.updateProductById(id);
     }
 
+    @PutMapping("/{id}")
+    public Product replaceProduct(@PathVariable("id") Long id, @RequestBody Product product) {
+        return productService.replaceProduct(id, product);
+    }
+
+    @ExceptionHandler(FileNotFoundException.class)
+    public ResponseEntity<Void> handleSomeException() {
+        return null;
+    }
+
 }
-
-/**
- * www.xyz.com/api/......
- * Endpoint is nothing but a combination of Domain Name + Path of Entity API
- * <p>
- * 1. GetProductById(Id)
- * 2. GetAllProducts
- * 3. UpdateProductById()
- * 4. DeleteProduct(id)
- * 5. AddProduct()
- * <p>
- * 1 Constructor Injection
- * 2. Feild Injection
- * 3. Setter Injection
- * <p>
- * 1. GetProductById(Id)
- * 2. GetAllProducts
- * 3. UpdateProductById()
- * 4. DeleteProduct(id)
- * 5. AddProduct()
- * <p>
- * 1 Constructor Injection
- * 2. Feild Injection
- * 3. Setter Injection
- * <p>
- * 1. GetProductById(Id)
- * 2. GetAllProducts
- * 3. UpdateProductById()
- * 4. DeleteProduct(id)
- * 5. AddProduct()
- * <p>
- * 1 Constructor Injection
- * 2. Feild Injection
- * 3. Setter Injection
- * <p>
- * 1. GetProductById(Id)
- * 2. GetAllProducts
- * 3. UpdateProductById()
- * 4. DeleteProduct(id)
- * 5. AddProduct()
- * <p>
- * 1 Constructor Injection
- * 2. Feild Injection
- * 3. Setter Injection
- */
-
-/**
- * 1. GetProductById(Id)
- * 2. GetAllProducts
- * 3. UpdateProductById()
- * 4. DeleteProduct(id)
- * 5. AddProduct()
- */
-
-/**
- * 1 Constructor Injection
- * 2. Feild Injection
- * 3. Setter Injection
- */
