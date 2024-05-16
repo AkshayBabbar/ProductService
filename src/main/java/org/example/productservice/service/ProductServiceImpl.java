@@ -5,12 +5,14 @@ import org.example.productservice.models.Category;
 import org.example.productservice.models.Product;
 import org.example.productservice.repositories.CategoryRepository;
 import org.example.productservice.repositories.ProductRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service("SelfProductService")
+@Primary
 public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
     private CategoryRepository categoryRepository;
@@ -37,25 +39,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String getProductByCategory(String Category) {
-        return null;
-    }
-
-    @Override
-    public Product deleteProductById(Long id) {
-        return null;
+    public void deleteProductById(Long id) {
     }
 
 
     @Override
-    public Product updateProductById(Long id) {
+    public Product updateProductById(Long id, Product product) {
         return null;
     }
 
-    @Override
-    public Product updateProduct(Long id, Product product) {
-        return null;
-    }
 
     @Override
     public Product replaceProduct(Long id, Product product) {

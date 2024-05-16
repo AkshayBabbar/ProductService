@@ -1,4 +1,4 @@
-package org.example.productservice.models;
+package org.example.productservice.dto;
 
 import lombok.Getter;
 import lombok.Setter;

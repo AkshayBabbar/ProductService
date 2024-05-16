@@ -15,10 +15,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Override
     Optional<Product> findById(Long id);
+
     List<Product> findByTitle(String word);
-    List<Product> findByTitleContains(String string);
-    // select * from products where title = <> and description = <>
-    List<Product> findByTitleDescriptionContains(String string);
+
+    List<Product> findByTitleContains(String str);
+
+    //select * from products where title = <> and description = <>
+    List<Product> findByTitleAndDescription(String title, String description);
 
     Optional<Product> findByImage(String url);
 

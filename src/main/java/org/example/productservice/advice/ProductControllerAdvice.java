@@ -15,10 +15,7 @@ public class ProductControllerAdvice {
         ExceptionDTO exceptionDto = new ExceptionDTO();
         exceptionDto.setMessage("Something went wrong");
         exceptionDto.setStatus("Error");
-
-        ResponseEntity<ExceptionDTO> responseEntity = new ResponseEntity<>(exceptionDto,
-                HttpStatus.INTERNAL_SERVER_ERROR);
-        return responseEntity;
+        return new ResponseEntity<>(exceptionDto,HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ArrayIndexOutOfBoundsException.class)
@@ -31,6 +28,6 @@ public class ProductControllerAdvice {
     private ResponseEntity<ProductNotFoundExceptionDTO> handleProductNotFoundException(ProductNotFoundException exception) {
         ProductNotFoundExceptionDTO productNotFoundExceptionDTO = new ProductNotFoundExceptionDTO();
         productNotFoundExceptionDTO.setMessage("Product with " + exception.getMessage() + " was found.");
-        return  new ResponseEntity<>(productNotFoundExceptionDTO,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(productNotFoundExceptionDTO, HttpStatus.NOT_FOUND);
     }
 }

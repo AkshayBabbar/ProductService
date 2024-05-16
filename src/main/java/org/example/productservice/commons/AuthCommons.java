@@ -1,6 +1,6 @@
 package org.example.productservice.commons;
 
-import org.example.productservice.models.UserDTO;
+import org.example.productservice.dto.UserDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;

@@ -39,21 +39,11 @@ public class FakeStoreProductServiceImpl implements ProductService {
         return null;
     }
 
-    @Override
-    public String getProductByCategory(String Category) {
-        return null;
-    }
 
     @Override
-    public Product updateProductById(Long id) throws ProductNotFoundException {
+    public Product updateProductById(Long id, Product product) throws ProductNotFoundException {
         return null;
     }
-
-    @Override
-    public Product updateProduct(Long id, Product product) {
-        return null;
-    }
-
     @Override
     public Product replaceProduct(Long id, Product product) {
         return null;
@@ -81,8 +71,11 @@ public class FakeStoreProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product deleteProductById(Long id) throws ProductNotFoundException {
-        return null;
+    public void deleteProductById(Long id) throws ProductNotFoundException {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if(optionalProduct.isEmpty()){
+            throw new ProductNotFoundException(id, "Product with id: "+ id + " is not found");
+        }
     }
 
 

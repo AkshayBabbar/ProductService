@@ -8,15 +8,14 @@ import java.util.List;
 public interface ProductService {
 
     Product getProductById(Long id) throws ProductNotFoundException;
-    List<Product> getAllProducts();
-    String getProductByCategory(String Category);
-    Product updateProductById(Long id) throws ProductNotFoundException;
 
-    Product updateProduct(Long id, Product product);
+    List<Product> getAllProducts();
+
+    Product updateProductById(Long id, Product product) throws ProductNotFoundException;
 
     Product replaceProduct(Long id, Product product);
 
     Product addProduct(Product product);
 
-    Product deleteProductById(Long id) throws ProductNotFoundException;
+    void deleteProductById(Long id) throws ProductNotFoundException;
 }
