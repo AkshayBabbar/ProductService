@@ -20,8 +20,8 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductController {
 
-    private ProductService productService;
-    private AuthCommons authCommons;
+    private final ProductService productService;
+    private final AuthCommons authCommons;
 
     @Autowired
     public ProductController(@Qualifier("SelfProductService") ProductService productService, AuthCommons authCommons) {
@@ -70,7 +70,7 @@ public class ProductController {
         return productService.updateProductById(id,product);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/products/{id}")
     public Product replaceProduct(@PathVariable("id") Long id, @RequestBody Product product) {
         return productService.replaceProduct(id, product);
     }

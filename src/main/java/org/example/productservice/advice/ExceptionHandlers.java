@@ -9,19 +9,18 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class ProductControllerAdvice {
+public class ExceptionHandlers {
     @ExceptionHandler(ArithmeticException.class)
     public ResponseEntity<ExceptionDTO> handleArithmeticException() {
         ExceptionDTO exceptionDto = new ExceptionDTO();
         exceptionDto.setMessage("Something went wrong");
         exceptionDto.setStatus("Error");
-        return new ResponseEntity<>(exceptionDto,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(exceptionDto, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ArrayIndexOutOfBoundsException.class)
     public ResponseEntity<Void> handleArrayIndexOutOfBoundException() {
-        ResponseEntity<Void> responseEntity = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        return responseEntity;
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(ProductNotFoundException.class)
